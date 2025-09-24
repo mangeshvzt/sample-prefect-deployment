@@ -1,0 +1,38 @@
+name: Deploy to GKE via Bastion
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ax-non-prd
+  GKE_CLUSTER_NAME: ax-data-processing
+  GKE_CLUSTER_REGION: europe-west1
+  GKE_NAMESPACE: prefect-preprd
+  GKE_PREFECT_SERVER_NAME: prefect-preprd-server
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: SSH into bastion and deploy
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.BASTION_HOST }}
+          username: ${{ secrets.BASTION_USER }}
+          key: ${{ secrets.BASTION_SSH_KEY }}
+          port: 22
+          script: |
+            echo "Authenticating with GKE..."
+            gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $PROJECT_ID
+
+            echo "Deploying hello world app..."
+            kubectl apply -f k8s/hello-world.yaml -n $GKE_NAMESPACE
+
+            echo "Deployment finished!"
