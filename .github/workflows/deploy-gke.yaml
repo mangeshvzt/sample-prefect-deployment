@@ -1,3 +1,68 @@
+name: Deploy to GKE via Bastion
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  PROJECT_ID: ax-non-prd
+  GKE_CLUSTER_NAME: ax-data-processing
+  GKE_CLUSTER_REGION: europe-west1
+  GKE_NAMESPACE: prefect-preprd
+  BASTION_USER: ext_mangeshv_zignuts_com
+  BASTION_NAME: bastion-host-ax-non-prd
+  BASTION_ZONE: europe-west1-b
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repo
+#         uses: actions/checkout@v4
+
+#       - name: Set up gcloud CLI
+#         uses: google-github-actions/setup-gcloud@v2
+#         with:
+#           project_id: ${{ env.PROJECT_ID }}
+#           service_account_key: ${{ secrets.GCP_SA_KEY }}
+#           export_default_credentials: true
+
+#       - name: Deploy via Bastion IAP
+#         run: |
+#           echo "Deploying via Bastion through IAP..."
+
+#           # Write service account key to a temporary file for the bastion
+#           echo '${{ secrets.GCP_SA_KEY }}' > sa-key.json
+
+#           # Copy the key to the bastion
+#           gcloud compute scp sa-key.json $BASTION_USER@$BASTION_NAME:~/sa-key.json \
+#             --project $PROJECT_ID \
+#             --zone $BASTION_ZONE \
+#             --tunnel-through-iap
+
+#           # Run commands on the bastion
+#           gcloud compute ssh $BASTION_USER@$BASTION_NAME \
+#             --project $PROJECT_ID \
+#             --zone $BASTION_ZONE \
+#             --tunnel-through-iap \
+#             --command "
+#               echo 'Activating service account...';
+#               gcloud auth activate-service-account --key-file=~/sa-key.json;
+
+#               echo 'Getting GKE credentials...';
+#               gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $PROJECT_ID;
+
+#               echo 'Deploying hello world app...';
+#               kubectl apply -f k8s/hello-world.yaml -n $GKE_NAMESPACE;
+
+#               echo 'Cleaning up...';
+#               rm ~/sa-key.json;
+
+#               echo 'Deployment finished!';
+#             "
 jobs:
   deploy:
     runs-on: ubuntu-latest
