@@ -101,8 +101,5 @@ jobs:
             --zone $BASTION_ZONE \
             --tunnel-through-iap \
             --command "
-              gcloud auth activate-service-account --key-file=~/sa-key.json;
-              gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $PROJECT_ID;
-              kubectl apply -f k8s/hello-world.yaml -n $GKE_NAMESPACE;
-              rm ~/sa-key.json;
+              touch mangesh-1
             "
