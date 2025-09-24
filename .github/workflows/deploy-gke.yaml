@@ -12,6 +12,9 @@ env:
   GKE_CLUSTER_REGION: europe-west1
   GKE_NAMESPACE: prefect-preprd
   GKE_PREFECT_SERVER_NAME: prefect-preprd-server
+  BASTION_USER: ext_mangeshv_zignuts_com
+  BASTION_NAME: bastion-host-ax-non-prd
+  BASTION_ZONE: europe-west1-b
 
 jobs:
   deploy:
@@ -21,18 +24,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: SSH into bastion and deploy
-        uses: appleboy/ssh-action@v0.1.10
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v2
         with:
-          host: ${{ secrets.BASTION_HOST }}
-          username: ${{ secrets.BASTION_USER }}
-          key: ${{ secrets.BASTION_SSH_KEY }}
-          port: 22
-          script: |
-            echo "Authenticating with GKE..."
-            gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $PROJECT_ID
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
 
-            echo "Deploying hello world app..."
-            kubectl apply -f k8s/hello-world.yaml -n $GKE_NAMESPACE
+      - name: Authenticate and deploy via Bastion IAP
+        run: |
+          echo "Deploying via Bastion through IAP..."
 
-            echo "Deployment finished!"
+          # Use gcloud SSH with IAP to execute commands on bastion
+          gcloud compute ssh $BASTION_USER@$BASTION_NAME \
+            --project $PROJECT_ID \
+            --zone $BASTION_ZONE \
+            --tunnel-through-iap \
+            --command "
+              echo 'Authenticating with GKE...';
+              gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GKE_CLUSTER_REGION --project $PROJECT_ID;
+              
+              echo 'Deploying hello world app...';
+              kubectl apply -f k8s/hello-world.yaml -n $GKE_NAMESPACE;
+
+              echo 'Deployment finished!';
+            "
