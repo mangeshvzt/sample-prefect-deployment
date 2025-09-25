@@ -11,7 +11,7 @@ env:
   GKE_CLUSTER_NAME: ax-data-processing
   GKE_CLUSTER_REGION: europe-west1
   GKE_NAMESPACE: prefect-preprd
-  MEMBERSHIP_NAME: ax-non-prd-fleet   # fleet membership name
+  MEMBERSHIP_NAME: ax-data-processing   # fleet membership name
 
 jobs:
   deploy:
