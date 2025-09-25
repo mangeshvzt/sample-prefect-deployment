@@ -13,40 +13,7 @@ env:
   GKE_NAMESPACE: prefect-preprd
   MEMBERSHIP_NAME: ax-data-processing   # fleet membership name
 
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout repo
-#         uses: actions/checkout@v4
-
-#       - name: Authenticate to GCP
-#         uses: google-github-actions/auth@v2
-#         with:
-#           credentials_json: ${{ secrets.GCP_SA_KEY }}
-
-#       - name: Setup gcloud CLI
-#         uses: google-github-actions/setup-gcloud@v2
-#         with:
-#           project_id: ${{ env.PROJECT_ID }}
-#           version: latest
-
-#       - name: Install gke-gcloud-auth-plugin
-#         run: |
-#           sudo apt-get update -y
-#           sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
-#           echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> $GITHUB_ENV
-
-#       - name: Configure kubectl via Connect Gateway
-#         run: |
-#           echo "Fetching kubeconfig using Connect Gateway..."
-#           gcloud container fleet memberships get-credentials $MEMBERSHIP_NAME \
-#             --project $PROJECT_ID
-
-#           echo "Verifying cluster access..."
-#           kubectl get nodes || true
-#           kubectl get ns
 
 jobs:
   deploy:
@@ -81,6 +48,6 @@ jobs:
       - name: Deploy workload to Autopilot cluster
         run: |
           echo "Deploying hello world app to $GKE_NAMESPACE..."
-          kubectl apply -f k8s/hello-world.yaml -n $GKE_NAMESPACE
+          kubectl apply -f k8s/apache.yaml -n $GKE_NAMESPACE
 
           echo "Deployment finished!"
