@@ -1,0 +1,11 @@
+flows:
+  - name: hello-flow
+    description: "Simple Hello World Prefect flow"
+    schedule: null
+    parameters: {}
+    steps:
+      - name: print_hello
+        task:
+          name: hello_task
+          type: shell
+          command: "echo 'Hello World from Prefect!'"
