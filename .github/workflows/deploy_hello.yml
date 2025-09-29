@@ -184,7 +184,8 @@ jobs:
       - name: Get IAP Token
         id: iap
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > sa-key.json
+          
+          printf "%s" "${{ secrets.GCP_SA_KEY }}" > sa-key.json
           IAP_BEARER=$(gcloud auth activate-service-account --key-file=sa-key.json \
                         && gcloud auth print-identity-token --audiences=/projects/884212667979/iap_web/2810333306836467958)
           if [ -z "$IAP_BEARER" ]; then
