@@ -44,15 +44,33 @@ fi
 
 # echo "Prefect deployment completed for environment: $ENV_TAG"
 
-# Prefect 3 CLI deployment
-echo "Deploying Prefect flow for environment: $ENV_TAG"
+# --- Set work pool ---
+POOL_NAME="default"
 
-prefect deploy --name "hello-world" flows/hello.py:hello_flow
+# Create pool if it doesn't exist
+if ! prefect work pool ls | grep -q "$POOL_NAME"; then
+    echo "🛠 Creating work pool: $POOL_NAME"
+    prefect work pool create process "$POOL_NAME"
+else
+    echo "✅ Work pool '$POOL_NAME' exists"
+fi
 
-echo "Deployment created (prefect.yaml saved)."
+# --- Deploy Prefect flow ---
+FLOW_FILE="flows/hello.py"
+FLOW_FUNCTION="hello_flow"
+DEPLOYMENT_NAME="hello-world"
 
-# Optionally start a worker automatically (local)
-# prefect worker start --pool default &
+echo "🚀 Deploying flow '$FLOW_FUNCTION' from $FLOW_FILE with deployment '$DEPLOYMENT_NAME'"
 
-echo "You can now run your deployment with:"
-echo "prefect deployment run 'hello-world/hello-world'"
+prefect deploy --name "$DEPLOYMENT_NAME" "$FLOW_FILE:$FLOW_FUNCTION" --pool "$POOL_NAME"
+
+echo "✅ Deployment created (prefect.yaml saved)"
+
+# --- Optional: start local worker ---
+# Uncomment the following lines if you want to start a local worker automatically
+# echo "⚡ Starting local worker for pool '$POOL_NAME'..."
+# prefect worker start --pool "$POOL_NAME" &
+
+echo "🎉 Deployment ready!"
+echo "Run your deployment with:"
+echo "  prefect deployment run '$DEPLOYMENT_NAME/$DEPLOYMENT_NAME'"
