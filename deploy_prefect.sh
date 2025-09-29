@@ -48,9 +48,14 @@ fi
 
 
 # --- Deploy Prefect flow ---
-FLOW_FILE="flows/hello.py"
-FLOW_FUNCTION="hello_flow"
-DEPLOYMENT_NAME="hello-world"
+# FLOW_FILE="flows/hello.py"
+# FLOW_FUNCTION="hello_flow"
+# DEPLOYMENT_NAME="hello-world"
+# POOL_NAME="gcp-kubernetes-worker-pool-30"
+
+FLOW_FILE="flows/test_flow.py"
+FLOW_FUNCTION="test_flow"
+DEPLOYMENT_NAME="test-flow-latest"
 POOL_NAME="gcp-kubernetes-worker-pool-30"
 
 echo "🚀 Deploying flow '$FLOW_FUNCTION' from $FLOW_FILE into pool '$POOL_NAME'"
