@@ -32,14 +32,21 @@ else
     echo "Warning: No IAP token found. Using default Prefect API URL."
 fi
 
-# Build deployment YAML
-prefect deployment build flows/hello.py:hello_flow \
-    -n "hello-world-deployment" \
-    -t "$ENV_TAG" \
-    -q "default" \
-    -o deployments/hello_deployment.yaml
+# # Build deployment YAML
+# prefect deployment build flows/hello.py:hello_flow \
+#     -n "hello-world-deployment" \
+#     -t "$ENV_TAG" \
+#     -q "default" \
+#     -o deployments/hello_deployment.yaml
 
-# Apply deployment
-prefect deployment apply deployments/hello_deployment.yaml
+# # Apply deployment
+# prefect deployment apply deployments/hello_deployment.yaml
+
+# echo "Prefect deployment completed for environment: $ENV_TAG"
+
+# Deploy flow
+prefect deployment create flows/hello_world.py:hello_world \
+    --name hello-world-deployment \
+    --apply
 
 echo "Prefect deployment completed for environment: $ENV_TAG"
