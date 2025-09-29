@@ -65,7 +65,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install Prefect
-        run: pip install prefect==2.18.6 requests
+        run: pip install prefect requests
       - name: Get IAP Token
         id: iap
         run: |
