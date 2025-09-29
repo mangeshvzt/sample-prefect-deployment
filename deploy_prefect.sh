@@ -44,17 +44,18 @@ fi
 
 # echo "Prefect deployment completed for environment: $ENV_TAG"
 
-# # Deploy flow
-# prefect deployment create flows/hello_world.py:hello_world \
-#     --name hello-world-deployment \
-#     --apply
+prefect deployment create flows/hello_world.py:hello_flow \
+    --name hello-world-deployment \
+    --image "$IMAGE_TAG" \
+    --queue default \
+    --tag "$ENV_TAG" \
+    --apply
+echo "Prefect deployment completed for environment: $ENV_TAG"
 
-# echo "Prefect deployment completed for environment: $ENV_TAG"
+# prefect deployment build hello_world.py:hello_flow \
+#     -n hello-world \
+#     -i $IMAGE_TAG \
+#     -q default \
+#     -o hello_world_deployment.yaml
 
-prefect deployment build hello_world.py:hello_flow \
-    -n hello-world \
-    -i $IMAGE_TAG \
-    -q default \
-    -o hello_world_deployment.yaml
-
-prefect deployment apply hello_world_deployment.yaml
+# prefect deployment apply hello_world_deployment.yaml
