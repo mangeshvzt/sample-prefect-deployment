@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_ID: ax-non-prd
-  IMAGE_BASE: europe-west1-docker.pkg.dev/ax-non-prd/hello-world
+  IMAGE_BASE: europe-west1-docker.pkg.dev/ax-non-prd/axium-services
   PREFECT_API_URL: https://test-preprd-prefect.axiumai.io/api
   DEPLOY_PREFECT: true
   GKE_NAMESPACE: prefect-preprd
