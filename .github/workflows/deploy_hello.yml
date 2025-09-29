@@ -192,7 +192,7 @@ jobs:
             exit 1
           fi
           echo "IAP_BEARER=$IAP_BEARER" >> $GITHUB_ENV
-          echo "Successfully fetched IAP token"
+          echo "Successfully fetched IAP token_"
 
       - name: Deploy Prefect Flow
         run: ./deploy_prefect.sh dev
