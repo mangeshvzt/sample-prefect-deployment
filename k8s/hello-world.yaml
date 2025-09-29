@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: hello
-        image: gcr.io/google-samples/hello-app:1.0
+        # image: gcr.io/google-samples/hello-app:1.0
+        image: europe-west1-docker.pkg.dev/ax-non-prd/axium-services/hello-world:latest
         ports:
         - containerPort: 8080
 ---
