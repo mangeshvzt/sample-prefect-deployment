@@ -1,4 +1,3 @@
 flask
-prefect
 requests
 prefect==2.18.6
