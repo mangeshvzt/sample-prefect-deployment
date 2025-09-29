@@ -44,21 +44,15 @@ fi
 
 # echo "Prefect deployment completed for environment: $ENV_TAG"
 
-# --- Detect Prefect version ---
-PREFECT_VERSION=$(prefect version 2>/dev/null || echo "3")
-echo "Detected Prefect version: $PREFECT_VERSION"
+# Prefect 3 CLI deployment
+echo "Deploying Prefect flow for environment: $ENV_TAG"
 
-# --- Deployment logic ---
-if [[ "$PREFECT_VERSION" == 2* ]]; then
-    echo "Using Prefect 2.x CLI deployment..."
-    prefect deploy --all --prefect-file flows/hello_world.py
-elif [[ "$PREFECT_VERSION" == 3* ]]; then
-    echo "Using Prefect 3.x CLI deployment..."
-    # Prefect 3.x can apply deployment directly from Python file
-    prefect deployment apply flows/hello_world.py
-else
-    echo "Unknown Prefect version: $PREFECT_VERSION"
-    exit 1
-fi
+prefect deploy --name "hello-world" flows/hello.py:hello_flow
 
-echo "Prefect deployment applied successfully for environment: $ENV_TAG"
+echo "Deployment created (prefect.yaml saved)."
+
+# Optionally start a worker automatically (local)
+# prefect worker start --pool default &
+
+echo "You can now run your deployment with:"
+echo "prefect deployment run 'hello-world/hello-world'"
