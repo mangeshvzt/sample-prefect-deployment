@@ -45,31 +45,22 @@ fi
 # echo "Prefect deployment completed for environment: $ENV_TAG"
 
 # --- Set work pool ---
-POOL_NAME="default"
 
-# Create pool if it doesn't exist
-if ! prefect work pool ls | grep -q "$POOL_NAME"; then
-    echo "🛠 Creating work pool: $POOL_NAME"
-    prefect work pool create process "$POOL_NAME"
-else
-    echo "✅ Work pool '$POOL_NAME' exists"
-fi
 
 # --- Deploy Prefect flow ---
 FLOW_FILE="flows/hello.py"
 FLOW_FUNCTION="hello_flow"
 DEPLOYMENT_NAME="hello-world"
+POOL_NAME="gcp-kubernetes-worker-pool-30"
 
-echo "🚀 Deploying flow '$FLOW_FUNCTION' from $FLOW_FILE with deployment '$DEPLOYMENT_NAME'"
+echo "🚀 Deploying flow '$FLOW_FUNCTION' from $FLOW_FILE into pool '$POOL_NAME'"
 
-prefect deploy --name "$DEPLOYMENT_NAME" "$FLOW_FILE:$FLOW_FUNCTION" --pool "$POOL_NAME"
+prefect deploy "$FLOW_FILE:$FLOW_FUNCTION" \
+    --name "$DEPLOYMENT_NAME" \
+    --pool "$POOL_NAME" \
+    --tag "$ENV_TAG"
 
 echo "✅ Deployment created (prefect.yaml saved)"
-
-# --- Optional: start local worker ---
-# Uncomment the following lines if you want to start a local worker automatically
-# echo "⚡ Starting local worker for pool '$POOL_NAME'..."
-# prefect worker start --pool "$POOL_NAME" &
 
 echo "🎉 Deployment ready!"
 echo "Run your deployment with:"
