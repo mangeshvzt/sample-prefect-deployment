@@ -190,7 +190,11 @@ jobs:
       - name: Get IAP Identity Token
         id: get_iap
         run: |
-          IAP_BEARER=$(gcloud auth print-identity-token --audiences=/projects/884212667979/iap_web/2810333306836467958)
+          # IAP_BEARER=$(gcloud auth print-identity-token --audiences=/projects/884212667979/iap_web/2810333306836467958)
+          IAP_CLIENT_ID="884212667979-so63rq6cjicj01mohnjlj51jau0dlftl.apps.googleusercontent.com"
+          IAP_BEARER=$(gcloud auth print-identity-token --audiences=$IAP_CLIENT_ID)
+          echo "IAP_BEARER=$IAP_BEARER" >> $GITHUB_ENV
+          
           if [ -z "$IAP_BEARER" ]; then
             echo "ERROR: Failed to fetch IAP token"
             exit 1
