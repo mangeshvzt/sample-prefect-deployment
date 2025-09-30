@@ -77,6 +77,7 @@ if [ -n "${PREFECT_API_BEARER:-}" ] && [ -n "${PREFECT_API_URL:-}" ]; then
     export PREFECT_API_URL
     # Prefect CLI expects PREFECT_API_BEARER_TOKEN, not PREFECT_API_BEARER
     export PREFECT_API_BEARER_TOKEN="$PREFECT_API_BEARER"
+    echo "Token preview: ${PREFECT_API_BEARER_TOKEN:0:20}..."
 else
     echo "⚠️ Warning: No IAP token found. Using default Prefect API URL."
 fi
@@ -101,7 +102,7 @@ prefect deploy "$FLOW_FILE:$FLOW_FUNCTION" \
     --name "$DEPLOYMENT_NAME" \
     --pool "$POOL_NAME" \
     --tag "$ENV_TAG" \
-    --override
+    
 
 echo "✅ Prefect deployment registered for environment: $ENV_TAG"
 echo "🎉 Deployment ready! Run with:"

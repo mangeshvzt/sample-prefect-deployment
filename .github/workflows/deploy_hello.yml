@@ -188,6 +188,7 @@ jobs:
           token_format: 'access_token'
 
       - name: Get IAP Identity Token
+        id: get_iap
         run: |
           IAP_BEARER=$(gcloud auth print-identity-token --audiences=/projects/884212667979/iap_web/2810333306836467958)
           if [ -z "$IAP_BEARER" ]; then
